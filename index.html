@@ -31,6 +31,9 @@
                             {
                                 data: "Reaction",
                                 render: function(data, type) {
+                                    if (data == "") {
+                                        return "なし"
+                                    }
                                     if (data.includes("\[")) {
                                         // 組み合わせ変換処理
                                         var reactions = [];
@@ -44,14 +47,12 @@
                                         });
                                         data = reactions.toString();
                                     }
-                                    if (data != "") {
-                                        // アイコン画像変換処理
-                                        data = data.split(",").map(element => {
-                                            return `<span style="display:inline-block">` + element.split("+").map(element2 => {
-                                                return `<img width="26px" src="${baseUrl}${iconmap.get(element2)}.png">`;
-                                            }).join("+") + `</span>`;
-                                        }).join(" ");
-                                    }
+                                    // アイコン画像変換処理
+                                    data = data.split(",").map(element => {
+                                        return `<span style="display:inline-block">` + element.split("+").map(element2 => {
+                                            return `<img width="26px" src="${baseUrl}${iconmap.get(element2)}.png">`;
+                                        }).join("+") + `</span>`;
+                                    }).join(" ");
                                     return data;
                                 }
                             },
@@ -80,7 +81,7 @@
                         fixedHeader: true,
                         scrollY: '80vh',
                         language: {
-                            url: "//cdn.datatables.net/plug-ins/2.2.2/i18n/ja.json"
+                            url: "https://cdn.datatables.net/plug-ins/2.2.2/i18n/ja.json"
                         },
                     });
                 });
