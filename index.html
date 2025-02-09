@@ -24,6 +24,7 @@
                             {
                                 data: "Material",
                                 render: function(data, type) {
+                                    // 表記変換処理
                                     return data.replaceAll("/", "×").replaceAll(",", ", ");
                                 }
                             },
@@ -31,6 +32,7 @@
                                 data: "Reaction",
                                 render: function(data, type) {
                                     if (data.includes("\[")) {
+                                        // 組み合わせ変換処理
                                         var reactions = [];
                                         if (!data.startsWith("[")) {
                                             reactions.push(data.split(",\[")[0]);
@@ -42,22 +44,13 @@
                                         });
                                         data = reactions.toString();
                                     }
-                                    var reactionsWithImage = [];
-                                    var charaCount = 0;
                                     if (data != "") {
-                                        data.split(",").forEach(element => {
-                                            var tmpArray = [];
-                                            element.split("+").forEach(element2 => {
-                                                tmpArray.push(`<img width="26px" src="${baseUrl}${iconmap.get(element2)}.png">`);
-                                                charaCount++;
-                                            });
-                                            reactionsWithImage.push(tmpArray.join("+"));
-                                            if (charaCount > 10) {
-                                                reactionsWithImage.push("<br>");
-                                                charaCount = 0;
-                                            }
-                                        });
-                                        data = reactionsWithImage.join(" ");
+                                        // アイコン画像変換処理
+                                        data = data.split(",").map(element => {
+                                            return `<span style="display:inline-block">` + element.split("+").map(element2 => {
+                                                return `<img width="26px" src="${baseUrl}${iconmap.get(element2)}.png">`;
+                                            }).join("+") + `</span>`;
+                                        }).join(" ");
                                     }
                                     return data;
                                 }
@@ -66,12 +59,14 @@
                                 data: "Reaction",
                                 visible: false,
                                 render: function(data, type) {
+                                    // 表記変換処理
                                     return data.replaceAll("メイコ", "MEIKO").replaceAll("カイト", "KAITO");
                                 }
                             },
                             {
                                 data: "Tag",
                                 render: function(data, type) {
+                                    // ボタン変換処理
                                     var result = [];
                                     data.split(",").forEach(element => {
                                         result.push(`<button type="button" class="btn btn-sm btn-light me-1" onclick="search(this.innerText)">${element}</button>`);
@@ -90,6 +85,8 @@
                     });
                 });
             });
+
+            // 組み合わせ変換用関数
             function combination(params) {
                 let array1 = params;
                 let arrayInit = [];
@@ -107,6 +104,8 @@
                 });
                 return result.toString();
             }
+
+            // タグ検索用イベントハンドラ
             function search(value) {
                 $("#dt-search-0")[0].value += " " + value;
                 $("#dt-search-0").trigger("keyup");
@@ -124,7 +123,7 @@
                 <th>No</th>
                 <th>名称</th>
                 <th>必要素材</th>
-                <th>リアクション</th>
+                <th width="30%">リアクション</th>
                 <th>リアクション(検索用)</th>
                 <th>タグ</th>
             </thead>
