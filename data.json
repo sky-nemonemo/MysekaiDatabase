@@ -31,14 +31,14 @@
         "No":  "5",
         "Name":  "きらめく流星のベッド",
         "Material":  "おもたい木材/8,釘/8,ふわふわコットン/4,さらさらリネン/4",
-        "Reaction":  "",
+        "Reaction":  "一歌,咲希,穂波,志歩,Lミク,Lルカ",
         "Tag":  "Leo/need,きらめく流星ルーム"
     },
     {
         "No":  "6",
         "Name":  "きらめく流星のテーブル",
         "Material":  "おもたい木材/6,プラスチック/6",
-        "Reaction":  "",
+        "Reaction":  "一歌,咲希,穂波,志歩,Lミク,Lルカ",
         "Tag":  "Leo/need,きらめく流星ルーム"
     },
     {
@@ -59,7 +59,7 @@
         "No":  "9",
         "Name":  "きらめく流星のラグ",
         "Material":  "ふわふわコットン/4,さらさらリネン/4",
-        "Reaction":  "",
+        "Reaction":  "一歌,咲希,穂波,志歩,Lミク,Lルカ",
         "Tag":  "Leo/need,きらめく流星ルーム"
     },
     {
@@ -71,87 +71,87 @@
     },
     {
         "No":  "11",
-        "Name":  "",
-        "Material":  "",
+        "Name":  "かがやくクローバーの壁紙",
+        "Material":  "想いの木材/30,さらさらリネン/3",
         "Reaction":  "",
-        "Tag":  ""
+        "Tag":  "MORE MORE JUMP！,かがやくクローバールーム"
     },
     {
         "No":  "12",
-        "Name":  "",
-        "Material":  "",
+        "Name":  "かがやくクローバーの床",
+        "Material":  "想いの木材/30,さらさらリネン/3",
         "Reaction":  "",
-        "Tag":  ""
+        "Tag":  "MORE MORE JUMP！,かがやくクローバールーム"
     },
     {
         "No":  "13",
-        "Name":  "",
-        "Material":  "",
+        "Name":  "かがやくクローバーの窓",
+        "Material":  "想いの木材/30,さらさらリネン/3,きれいなガラス/3",
         "Reaction":  "",
-        "Tag":  ""
+        "Tag":  "MORE MORE JUMP！,かがやくクローバールーム"
     },
     {
         "No":  "14",
-        "Name":  "",
-        "Material":  "",
-        "Reaction":  "",
-        "Tag":  ""
+        "Name":  "かがやくクローバーのチェスト",
+        "Material":  "想いの木材/30,かるい木材/6,釘/6,鉄/3",
+        "Reaction":  "みのり,遥,愛莉,雫,Mミク,Mリン",
+        "Tag":  "MORE MORE JUMP！,かがやくクローバールーム"
     },
     {
         "No":  "15",
-        "Name":  "",
-        "Material":  "",
-        "Reaction":  "",
-        "Tag":  ""
+        "Name":  "かがやくクローバーのベッド",
+        "Material":  "おもたい木材/8,釘/8,ふわふわコットン/4,さらさらリネン/4",
+        "Reaction":  "みのり,遥,愛莉,雫,Mミク,Mリン",
+        "Tag":  "MORE MORE JUMP！,かがやくクローバールーム"
     },
     {
         "No":  "16",
-        "Name":  "",
-        "Material":  "",
-        "Reaction":  "",
-        "Tag":  ""
+        "Name":  "かがやくクローバーのテーブル",
+        "Material":  "おもたい木材/6,プラスチック/6",
+        "Reaction":  "みのり,遥,愛莉,雫,Mミク,Mリン",
+        "Tag":  "MORE MORE JUMP！,かがやくクローバールーム"
     },
     {
         "No":  "17",
-        "Name":  "",
-        "Material":  "",
+        "Name":  "かがやくクローバーのチェア",
+        "Material":  "おもたい木材/6,プラスチック/6",
         "Reaction":  "",
-        "Tag":  ""
+        "Tag":  "MORE MORE JUMP！,かがやくクローバールーム"
     },
     {
         "No":  "18",
-        "Name":  "",
-        "Material":  "",
+        "Name":  "かがやくクローバーのシェルフ",
+        "Material":  "想いの木材/30,鉄/3,粘土/3,花びら/21,きれいなガラス/3",
         "Reaction":  "",
-        "Tag":  ""
+        "Tag":  "MORE MORE JUMP！,かがやくクローバールーム"
     },
     {
         "No":  "19",
-        "Name":  "",
-        "Material":  "",
-        "Reaction":  "",
-        "Tag":  ""
+        "Name":  "かがやくクローバーのソファ",
+        "Material":  "おもたい木材/6,釘/6,ふわふわコットン/3,さらさらリネン/3",
+        "Reaction":  "[みのり,遥,愛莉,雫,Mミク,Mリン]",
+        "Tag":  "MORE MORE JUMP！,かがやくクローバールーム"
     },
     {
         "No":  "20",
-        "Name":  "",
-        "Material":  "",
+        "Name":  "かがやくクローバーのローテーブル",
+        "Material":  "おもたい木材/6,プラスチック/6",
         "Reaction":  "",
-        "Tag":  ""
+        "Tag":  "MORE MORE JUMP！,かがやくクローバールーム"
     },
     {
         "No":  "21",
-        "Name":  "",
-        "Material":  "",
-        "Reaction":  "",
-        "Tag":  ""
+        "Name":  "かがやくクローバーのラグ",
+        "Material":  "ふわふわコットン/4,さらさらリネン/4",
+        "Reaction":  "みのり,遥,愛莉,雫,Mミク,Mリン",
+        "Tag":  "MORE MORE JUMP！,かがやくクローバールーム"
     },
     {
         "No":  "22",
-        "Name":  "",
-        "Material":  "",
+        "Name":  "かがやくクローバーの本棚",
+        "Material":  "想いの木材/30,かるい木材/6,釘/6,鉄/3",
         "Reaction":  "",
-        "Tag":  ""
+        "Tag":  "MORE MORE JUMP！,かがやくクローバールーム"
     },
     {
         "No":  "23",

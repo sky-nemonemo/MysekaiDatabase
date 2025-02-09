@@ -7,25 +7,76 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
         <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/jszip-3.10.1/dt-2.2.2/af-2.7.0/b-3.2.2/b-colvis-3.2.2/b-html5-3.2.2/b-print-3.2.2/cr-2.0.4/date-1.5.5/fc-5.0.4/fh-4.0.1/kt-2.12.1/r-3.0.3/rg-1.5.1/rr-1.5.0/sc-2.4.3/sb-1.8.2/sp-2.3.3/sl-3.0.0/sr-1.4.1/datatables.min.js"></script>
-        <script></script>
+        <script src="iconmap.js"></script>
         <script>
             $(function() {
                 $.get("data.json", function(data) {
+                    data.forEach(element => {
+                        element.Material = element.Material.replaceAll("/", "×").replaceAll(",", ", ");
+                        element.Tag = element.Tag.replaceAll(",", ", ");
+                        if (element.Reaction.includes("[")) {
+                            var result = "";
+                            element.Reaction.split("\]").forEach(group => {
+                                group = group.replaceAll("\[", "");
+                                combinations = combination(group.split(","));
+                                result += combinations;
+                            });
+                            element.Reaction = result;
+                        }
+                        var reactionWithImage = [];
+                        var charaCount = 0;
+                        if (element.Reaction != "") {
+                            element.Reaction.split(",").forEach(element => {
+                                var tmpArray = [];
+                                element.split("+").forEach(element2 => {
+                                    tmpArray.push(`<img width="26px" src="${baseUrl}${iconmap.get(element2)}.png">`);
+                                    charaCount++;
+                                });
+                                reactionWithImage.push(tmpArray.join("+"));
+                                if (charaCount == 10) {
+                                    reactionWithImage.push("<br>");
+                                    charaCount = 0;
+                                }
+                            });
+                            element.Reaction = reactionWithImage.join(" ");
+                        }
+                    });
                     $("#contents").DataTable({
-                        "data": data,
-                        "columns": [
+                        data: data,
+                        columns: [
                             { data: "No" },
                             { data: "Name" },
                             { data: "Material" },
                             { data: "Reaction" },
-                            { data: "Tag" }
-                        ]
+                            { data: "Tag" },
+                        ],
+                        info: false,
+                        pageLength: 100,
+                        fixedHeader: true,
+                        scrollY: '80vh'
                     });
                 });
             });
+            function combination(params) {
+                let array1 = params;
+                let arrayInit = [];
+                let i, j,array2;
+
+                for(i = 0;i < array1.length; i++){
+                    array2 = array1.slice(i + 1)
+                    for(j = 0; j < array2.length; j++) {
+                        arrayInit.push([array1[i]].concat([array2[j]]))
+                    }
+                }
+                result = [];
+                arrayInit.forEach(element => {
+                    result.push(element[0] + "+" + element[1]);
+                });
+                return result.toString();
+            }
         </script>
     </head>
-    <body>
+    <body style="padding: 20px;">
         <table id="contents" class="table table-striped" style="width:100%">
             <thead>
                 <th>No</th>
