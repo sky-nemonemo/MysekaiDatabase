@@ -11,7 +11,6 @@
         <script>
             $(function() {
                 $.get("data.json", function(data) {
-                    var tableData = JSON.parse(data);
                     $("#contents").DataTable({
                         "data": tableData
                     });
