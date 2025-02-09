@@ -14,31 +14,36 @@
                     data.forEach(element => {
                         element.Material = element.Material.replaceAll("/", "×").replaceAll(",", ", ");
                         element.Tag = element.Tag.replaceAll(",", ", ");
-                        if (element.Reaction.includes("[")) {
-                            var result = "";
-                            element.Reaction.split("\]").forEach(group => {
-                                group = group.replaceAll("\[", "");
+
+                        if (element.Reaction.includes("\[")) {
+                            var reactions = [];
+                            if (!element.Reaction.startsWith("[")) {
+                                reactions.push(element.Reaction.split(",\[")[0]);
+                            }
+                            element.Reaction.match(/\[.*?\]/g).forEach(group => {
+                                group = group.replaceAll("\[", "").replaceAll("\]", "");
                                 combinations = combination(group.split(","));
-                                result += combinations;
+                                reactions.push(combinations);
                             });
-                            element.Reaction = result;
+                            element.Reaction = reactions.toString();
                         }
-                        var reactionWithImage = [];
+
+                        var reactionsWithImage = [];
                         var charaCount = 0;
                         if (element.Reaction != "") {
                             element.Reaction.split(",").forEach(element => {
                                 var tmpArray = [];
                                 element.split("+").forEach(element2 => {
-                                    tmpArray.push(`<img width="26px" src="${baseUrl}${iconmap.get(element2)}.png">`);
+                                    tmpArray.push(`<img width="26px" alt="${element2}" src="${baseUrl}${iconmap.get(element2)}.png">`);
                                     charaCount++;
                                 });
-                                reactionWithImage.push(tmpArray.join("+"));
-                                if (charaCount == 10) {
-                                    reactionWithImage.push("<br>");
+                                reactionsWithImage.push(tmpArray.join("+"));
+                                if (charaCount > 10) {
+                                    reactionsWithImage.push("<br>");
                                     charaCount = 0;
                                 }
                             });
-                            element.Reaction = reactionWithImage.join(" ");
+                            element.Reaction = reactionsWithImage.join(" ");
                         }
                     });
                     $("#contents").DataTable({
