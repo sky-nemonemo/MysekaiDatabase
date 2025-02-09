@@ -12,14 +12,29 @@
             $(function() {
                 $.get("data.json", function(data) {
                     $("#contents").DataTable({
-                        "data": data
+                        "data": data,
+                        "columns": [
+                            { data: "No" },
+                            { data: "Name" },
+                            { data: "Material" },
+                            { data: "Reaction" },
+                            { data: "Tag" }
+                        ]
                     });
                 });
             });
         </script>
     </head>
     <body>
-        <table id="contents">
+        <table id="contents" class="table table-striped" style="width:100%">
+            <thead>
+                <th>No</th>
+                <th>名称</th>
+                <th>必要素材</th>
+                <th>リアクション</th>
+                <th>タグ</th>
+            </thead>
+            <tbody></tbody>
         </table>
     </body>
 </html>

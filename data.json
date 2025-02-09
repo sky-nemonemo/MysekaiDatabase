@@ -9,16 +9,16 @@
     {
         "No":  "2",
         "Name":  "きらめく流星の床",
-        "Material":  "",
+        "Material":  "想いの木材/30,さらさらリネン/3",
         "Reaction":  "",
-        "Tag":  ""
+        "Tag":  "Leo/need,きらめく流星ルーム"
     },
     {
         "No":  "3",
         "Name":  "きらめく流星の窓",
-        "Material":  "",
+        "Material":  "想いの木材/30,さらさらリネン/3,きれいなガラス/3",
         "Reaction":  "",
-        "Tag":  ""
+        "Tag":  "Leo/need,きらめく流星ルーム"
     },
     {
         "No":  "4",
@@ -29,45 +29,45 @@
     },
     {
         "No":  "5",
-        "Name":  "",
-        "Material":  "",
+        "Name":  "きらめく流星のベッド",
+        "Material":  "おもたい木材/8,釘/8,ふわふわコットン/4,さらさらリネン/4",
         "Reaction":  "",
-        "Tag":  ""
+        "Tag":  "Leo/need,きらめく流星ルーム"
     },
     {
         "No":  "6",
-        "Name":  "",
-        "Material":  "",
+        "Name":  "きらめく流星のテーブル",
+        "Material":  "おもたい木材/6,プラスチック/6",
         "Reaction":  "",
-        "Tag":  ""
+        "Tag":  "Leo/need,きらめく流星ルーム"
     },
     {
         "No":  "7",
-        "Name":  "",
-        "Material":  "",
+        "Name":  "きらめく流星のチェア",
+        "Material":  "おもたい木材/6,プラスチック/6",
         "Reaction":  "",
-        "Tag":  ""
+        "Tag":  "Leo/need,きらめく流星ルーム"
     },
     {
         "No":  "8",
-        "Name":  "",
-        "Material":  "",
+        "Name":  "きらめく流星のローテーブル",
+        "Material":  "おもたい木材/6,プラスチック/6",
         "Reaction":  "",
-        "Tag":  ""
+        "Tag":  "Leo/need,きらめく流星ルーム"
     },
     {
         "No":  "9",
-        "Name":  "",
-        "Material":  "",
+        "Name":  "きらめく流星のラグ",
+        "Material":  "ふわふわコットン/4,さらさらリネン/4",
         "Reaction":  "",
-        "Tag":  ""
+        "Tag":  "Leo/need,きらめく流星ルーム"
     },
     {
         "No":  "10",
-        "Name":  "",
-        "Material":  "",
+        "Name":  "きらめく流星の本棚",
+        "Material":  "想いの木材/30,かるい木材/6,釘/6,鉄/3",
         "Reaction":  "",
-        "Tag":  ""
+        "Tag":  "Leo/need,きらめく流星ルーム"
     },
     {
         "No":  "11",
