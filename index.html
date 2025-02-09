@@ -22,6 +22,9 @@
                                 data: "Name"
                             },
                             {
+                                data: "Category"
+                            },
+                            {
                                 data: "Material",
                                 render: function(data, type) {
                                     // 表記変換処理
@@ -68,11 +71,12 @@
                                 data: "Tag",
                                 render: function(data, type) {
                                     // ボタン変換処理
-                                    var result = [];
-                                    data.split(",").forEach(element => {
-                                        result.push(`<button type="button" class="btn btn-sm btn-light me-1" onclick="search(this.innerText)">${element}</button>`);
-                                    });
-                                    return result.join("");
+                                    if (data == "") {
+                                        return data;
+                                    }
+                                    return data.split(",").map(element => {
+                                        return `<button type="button" class="btn btn-sm btn-light me-1" onclick="search(this.innerText)">${element}</button>`;
+                                    }).join("");
                                 }
                             },
                         ],
@@ -123,6 +127,7 @@
             <thead>
                 <th>No</th>
                 <th>名称</th>
+                <th>カテゴリ</th>
                 <th>必要素材</th>
                 <th width="30%">リアクション</th>
                 <th>リアクション(検索用)</th>
