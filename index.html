@@ -10,55 +10,83 @@
         <script src="iconmap.js"></script>
         <script>
             $(function() {
-                $.get("data.json", function(data) {
-                    data.forEach(element => {
-                        element.Material = element.Material.replaceAll("/", "×").replaceAll(",", ", ");
-                        element.Tag = element.Tag.replaceAll(",", ", ");
-
-                        if (element.Reaction.includes("\[")) {
-                            var reactions = [];
-                            if (!element.Reaction.startsWith("[")) {
-                                reactions.push(element.Reaction.split(",\[")[0]);
-                            }
-                            element.Reaction.match(/\[.*?\]/g).forEach(group => {
-                                group = group.replaceAll("\[", "").replaceAll("\]", "");
-                                combinations = combination(group.split(","));
-                                reactions.push(combinations);
-                            });
-                            element.Reaction = reactions.toString();
-                        }
-
-                        var reactionsWithImage = [];
-                        var charaCount = 0;
-                        if (element.Reaction != "") {
-                            element.Reaction.split(",").forEach(element => {
-                                var tmpArray = [];
-                                element.split("+").forEach(element2 => {
-                                    tmpArray.push(`<img width="26px" alt="${element2}" src="${baseUrl}${iconmap.get(element2)}.png">`);
-                                    charaCount++;
-                                });
-                                reactionsWithImage.push(tmpArray.join("+"));
-                                if (charaCount > 10) {
-                                    reactionsWithImage.push("<br>");
-                                    charaCount = 0;
-                                }
-                            });
-                            element.Reaction = reactionsWithImage.join(" ");
-                        }
-                    });
+                $.get("data.json?date=" + Date.now(), function(data) {
                     $("#contents").DataTable({
                         data: data,
                         columns: [
-                            { data: "No" },
-                            { data: "Name" },
-                            { data: "Material" },
-                            { data: "Reaction" },
-                            { data: "Tag" },
+                            {
+                                data: "No",
+                                searchable: false,
+                            },
+                            {
+                                data: "Name"
+                            },
+                            {
+                                data: "Material",
+                                render: function(data, type) {
+                                    return data.replaceAll("/", "×").replaceAll(",", ", ");
+                                }
+                            },
+                            {
+                                data: "Reaction",
+                                render: function(data, type) {
+                                    if (data.includes("\[")) {
+                                        var reactions = [];
+                                        if (!data.startsWith("[")) {
+                                            reactions.push(data.split(",\[")[0]);
+                                        }
+                                        data.match(/\[.*?\]/g).forEach(group => {
+                                            group = group.replaceAll("\[", "").replaceAll("\]", "");
+                                            combinations = combination(group.split(","));
+                                            reactions.push(combinations);
+                                        });
+                                        data = reactions.toString();
+                                    }
+                                    var reactionsWithImage = [];
+                                    var charaCount = 0;
+                                    if (data != "") {
+                                        data.split(",").forEach(element => {
+                                            var tmpArray = [];
+                                            element.split("+").forEach(element2 => {
+                                                tmpArray.push(`<img width="26px" src="${baseUrl}${iconmap.get(element2)}.png">`);
+                                                charaCount++;
+                                            });
+                                            reactionsWithImage.push(tmpArray.join("+"));
+                                            if (charaCount > 10) {
+                                                reactionsWithImage.push("<br>");
+                                                charaCount = 0;
+                                            }
+                                        });
+                                        data = reactionsWithImage.join(" ");
+                                    }
+                                    return data;
+                                }
+                            },
+                            {
+                                data: "Reaction",
+                                visible: false,
+                                render: function(data, type) {
+                                    return data.replaceAll("メイコ", "MEIKO").replaceAll("カイト", "KAITO");
+                                }
+                            },
+                            {
+                                data: "Tag",
+                                render: function(data, type) {
+                                    var result = [];
+                                    data.split(",").forEach(element => {
+                                        result.push(`<button type="button" class="btn btn-sm btn-light me-1" onclick="search(this.innerText)">${element}</button>`);
+                                    });
+                                    return result.join("");
+                                }
+                            },
                         ],
                         info: false,
                         pageLength: 100,
                         fixedHeader: true,
-                        scrollY: '80vh'
+                        scrollY: '80vh',
+                        language: {
+                            url: "//cdn.datatables.net/plug-ins/2.2.2/i18n/ja.json"
+                        },
                     });
                 });
             });
@@ -79,7 +107,16 @@
                 });
                 return result.toString();
             }
+            function search(value) {
+                $("#dt-search-0")[0].value += " " + value;
+                $("#dt-search-0").trigger("keyup");
+            }
         </script>
+        <style>
+            input#dt-search-0 {
+                width: 300px;
+            }
+        </style>
     </head>
     <body style="padding: 20px;">
         <table id="contents" class="table table-striped" style="width:100%">
@@ -88,6 +125,7 @@
                 <th>名称</th>
                 <th>必要素材</th>
                 <th>リアクション</th>
+                <th>リアクション(検索用)</th>
                 <th>タグ</th>
             </thead>
             <tbody></tbody>
