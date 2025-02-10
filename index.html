@@ -36,6 +36,8 @@
                                 render: function(data, type) {
                                     if (data == "") {
                                         return "なし"
+                                    } else if (data == "？？？") {
+                                        return data;
                                     }
                                     if (data.includes("\[")) {
                                         // 組み合わせ変換処理
