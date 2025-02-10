@@ -11,7 +11,7 @@
         <script>
             $(function() {
                 $.get("data.json?date=" + Date.now(), function(data) {
-                    $("#contents").DataTable({
+                    var table = $("#contents").DataTable({
                         data: data,
                         columns: [
                             {
@@ -28,7 +28,9 @@
                                 data: "Material",
                                 render: function(data, type) {
                                     // 表記変換処理
-                                    return data.replaceAll("/", "×").replaceAll(",", ", ");
+                                    return data.split(",").map(element => {
+                                        return `<span style="display:inline-block; margin-right:10px;">${element.replaceAll("/", "×")}</span>`;
+                                    }).join("");
                                 }
                             },
                             {
@@ -54,11 +56,14 @@
                                     }
                                     // アイコン画像変換処理
                                     data = data.split(",").map(element => {
-                                        return `<span style="display:inline-block">` + element.split("+").map(element2 => {
+                                        return `<span style="display:inline-block; margin:1px;">` + element.split("+").map(element2 => {
                                             return `<img width="26px" src="${baseUrl}${iconmap.get(element2)}.png">`;
                                         }).join("+") + `</span>`;
-                                    }).join(" ");
+                                    }).join("");
                                     return data;
+                                },
+                                searchPanes: {
+                                    show: false
                                 }
                             },
                             {
@@ -67,6 +72,9 @@
                                 render: function(data, type) {
                                     // 表記変換処理
                                     return data.replaceAll("メイコ", "MEIKO").replaceAll("カイト", "KAITO");
+                                },
+                                searchPanes: {
+                                    show: false
                                 }
                             },
                             {
@@ -79,6 +87,9 @@
                                     return data.split(",").map(element => {
                                         return `<button type="button" class="btn btn-sm btn-light me-1" onclick="search(this.innerText)">${element}</button>`;
                                     }).join("");
+                                },
+                                searchPanes: {
+                                    show: false
                                 }
                             },
                         ],
@@ -87,8 +98,44 @@
                         fixedHeader: true,
                         scrollY: '80vh',
                         language: {
-                            url: "https://cdn.datatables.net/plug-ins/2.2.2/i18n/ja.json"
+                            url: "https://cdn.datatables.net/plug-ins/2.2.2/i18n/ja.json",
+                            searchPanes: {
+                                collapse: {
+                                    0: "詳細検索(工事中)",
+                                    _: "詳細検索 (%d)",
+                                },
+                            }
                         },
+                        layout: {
+                            topEnd: {
+                                search: {},
+                                buttons: [
+                                    {
+                                        extend: "searchPanes",
+                                        config: {
+                                            cascadePanes: true,
+                                            panes: [
+                                                {
+                                                    name: "リアクション",
+                                                    header: "リアクション",
+                                                    options: Array.from(iconmap.keys()).map(key => {
+                                                        return {
+                                                            label: key,
+                                                            value: function(rowData, rowIdx) {
+                                                                return rowData.Reaction.includes(key);
+                                                            }
+                                                        }
+                                                    })
+                                                }
+                                            ]
+                                        },
+                                    }
+                                ]
+                            }
+                        },
+                    });
+                    table.on("page", function() {
+                        $(".dt-scroll-body").scrollTop(0);
                     });
                 });
             });
@@ -136,7 +183,7 @@
                 <th width="8%">カテゴリ</th>
                 <th>必要素材</th>
                 <th width="30%">リアクション</th>
-                <th>リアクション(検索用)</th>
+                <th>リアクション</th>
                 <th width="25%">タグ</th>
             </thead>
             <tbody></tbody>
