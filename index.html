@@ -80,7 +80,7 @@
                                         }).join("");
                                     } else if (type === "filter") {
                                         // 表記変換処理
-                                        return data.replaceAll("メイコ", "MEIKO").replaceAll("カイト", "KAITO");
+                                        return convertUnit(data);
                                     } else {
                                         return data;
                                     }
@@ -160,7 +160,7 @@
                                                     header: "リアクション",
                                                     options: Array.from(iconmap.keys()).map(key => {
                                                         return {
-                                                            label: `<img width="26px" src="${baseUrl}${iconmap.get(key)}.png">`,
+                                                            label: `<img width="26px" src="${baseUrl}${iconmap.get(key)}.png"> ${convertUnit(key)}`,
                                                             value: function(rowData, rowIdx) {
                                                                 return rowData.Reaction.includes(key);
                                                             }
@@ -240,8 +240,18 @@
                 if ($("#dt-search-0")[0].value.includes(value)) {
                     return;
                 }
-                $("#dt-search-0")[0].value += " " + value;
+                $("#dt-search-0")[0].value = ($("#dt-search-0")[0].value + " " + value).trim();
                 $("#dt-search-0").trigger("keyup");
+            }
+
+            // ユニット識別子変換関数
+            function convertUnit(value) {
+                var initial = value.split("")[0];
+                value = value.replaceAll("メイコ", "MEIKO").replaceAll("カイト", "KAITO");
+                if (units.has(initial)) {
+                    return value.split("").slice(1).join("") + ` (${units.get(initial)})`;
+                }
+                return value;
             }
         </script>
         <style>
