@@ -9,7 +9,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
         <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/jszip-3.10.1/dt-2.2.2/af-2.7.0/b-3.2.2/b-colvis-3.2.2/b-html5-3.2.2/b-print-3.2.2/cr-2.0.4/date-1.5.5/fc-5.0.4/fh-4.0.1/kt-2.12.1/r-3.0.3/rg-1.5.1/rr-1.5.0/sc-2.4.3/sb-1.8.2/sp-2.3.3/sl-3.0.0/sr-1.4.1/datatables.min.js"></script>
-        <script src="iconmap.js"></script>
+        <script src="const.js"></script>
         <script>
             $(function() {
                 $.get("data.json?date=" + Date.now(), function(data) {
@@ -19,24 +19,39 @@
                             {
                                 data: "No",
                                 searchable: false,
+                                searchPanes: {
+                                    show: false
+                                },
                             },
                             {
-                                data: "Name"
+                                data: "Name",
+                                searchPanes: {
+                                    show: false
+                                },
                             },
                             {
-                                data: "Category"
+                                data: "Category",
+                                searchPanes: {
+                                    show: false
+                                },
                             },
                             {
                                 data: "Material",
+                                searchPanes: {
+                                    show: false
+                                },
                                 render: function(data, type) {
                                     // 表記変換処理
                                     return data.split(",").map(element => {
                                         return `<span style="display:inline-block; margin-right:10px;">${element.replaceAll("/", "×")}</span>`;
                                     }).join("");
-                                }
+                                },
                             },
                             {
                                 data: "Reaction",
+                                searchPanes: {
+                                    show: false
+                                },
                                 render: function(data, type) {
                                     if (data == "") {
                                         return "なし"
@@ -56,31 +71,26 @@
                                         });
                                         data = reactions.toString();
                                     }
-                                    // アイコン画像変換処理
-                                    data = data.split(",").map(element => {
-                                        return `<span style="display:inline-block; margin:1px;">` + element.split("+").map(element2 => {
-                                            return `<img width="26px" src="${baseUrl}${iconmap.get(element2)}.png">`;
-                                        }).join("+") + `</span>`;
-                                    }).join("");
-                                    return data;
+                                    if (type === "display" || type === "sort") {
+                                        // アイコン画像変換処理
+                                        return data.split(",").map(element => {
+                                            return `<span style="display:inline-block; margin:1px;">` + element.split("+").map(element2 => {
+                                                return `<img width="26px" src="${baseUrl}${iconmap.get(element2)}.png">`;
+                                            }).join("+") + `</span>`;
+                                        }).join("");
+                                    } else if (type === "filter") {
+                                        // 表記変換処理
+                                        return data.replaceAll("メイコ", "MEIKO").replaceAll("カイト", "KAITO");
+                                    } else {
+                                        return data;
+                                    }
                                 },
-                                searchPanes: {
-                                    show: false
-                                }
-                            },
-                            {
-                                data: "Reaction",
-                                visible: false,
-                                render: function(data, type) {
-                                    // 表記変換処理
-                                    return data.replaceAll("メイコ", "MEIKO").replaceAll("カイト", "KAITO");
-                                },
-                                searchPanes: {
-                                    show: false
-                                }
                             },
                             {
                                 data: "Tag",
+                                searchPanes: {
+                                    show: false
+                                },
                                 render: function(data, type) {
                                     // ボタン変換処理
                                     if (data == "") {
@@ -90,9 +100,6 @@
                                         return `<button type="button" class="btn btn-sm btn-light me-1" onclick="search(this.innerText)">${element}</button>`;
                                     }).join("");
                                 },
-                                searchPanes: {
-                                    show: false
-                                }
                             },
                         ],
                         info: false,
@@ -103,10 +110,20 @@
                         language: {
                             url: "https://cdn.datatables.net/plug-ins/2.2.2/i18n/ja.json",
                             searchPanes: {
-                                collapse: {
-                                    0: "詳細検索(工事中)",
-                                    _: "詳細検索 (%d)",
+                                title: {
+                                    _: "詳細検索パネル",
                                 },
+                                collapse: {
+                                    _: "詳細検索",
+                                },
+                                clearMessage: "すべて解除",
+                                emptyMessage: "(データなし)",
+                            },
+                            paginate: {
+                                next: ">",
+                                previous: "<",
+                                last: ">>",
+                                first: "<<",
                             }
                         },
                         layout: {
@@ -117,18 +134,74 @@
                                         extend: "searchPanes",
                                         config: {
                                             cascadePanes: true,
+                                            collapse: false,
+                                            orderable: false,
+                                            viewTotal: true,
+                                            threshold: 1,
                                             panes: [
+                                                {
+                                                    name: "カテゴリ",
+                                                    header: "カテゴリ",
+                                                    options: Array.from(categories).map(key => {
+                                                        return {
+                                                            label: key,
+                                                            value: function(rowData, rowIdx) {
+                                                                return rowData.Category.includes(key.replaceAll("/すべて", ""));
+                                                            }
+                                                        }
+                                                    }),
+                                                    dtOpts: {
+                                                        ordering: false,
+                                                    },
+                                                    ordering: false,
+                                                },
                                                 {
                                                     name: "リアクション",
                                                     header: "リアクション",
                                                     options: Array.from(iconmap.keys()).map(key => {
                                                         return {
-                                                            label: key,
+                                                            label: `<img width="26px" src="${baseUrl}${iconmap.get(key)}.png">`,
                                                             value: function(rowData, rowIdx) {
                                                                 return rowData.Reaction.includes(key);
                                                             }
                                                         }
-                                                    })
+                                                    }),
+                                                    dtOpts: {
+                                                        ordering: false,
+                                                    },
+                                                },
+                                                {
+                                                    name: "タグ",
+                                                    header: "タグ",
+                                                    options: function() {
+                                                        const tags = new Set(series);
+                                                        data.forEach(element => {
+                                                            element.Tag.split(",").forEach(tag => {
+                                                                if (tag !== "") {
+                                                                    tags.add(tag);
+                                                                }
+                                                            });
+                                                        });
+                                                        return Array.from(tags.values()).map(tag => {
+                                                            return {
+                                                                label: tag,
+                                                                value: function(rowData, rowIdx) {
+                                                                    return rowData.Tag.includes(tag);
+                                                                }
+                                                            }
+                                                        });
+                                                    }(),
+                                                    dtOpts: {
+                                                        ordering: false,
+                                                        paging: true,
+                                                        layout: {
+                                                            bottom: {
+                                                                paging: {
+                                                                    type: 'numbers'
+                                                                }
+                                                            }
+                                                        },
+                                                    },
                                                 }
                                             ]
                                         },
@@ -164,6 +237,9 @@
 
             // タグ検索用イベントハンドラ
             function search(value) {
+                if ($("#dt-search-0")[0].value.includes(value)) {
+                    return;
+                }
                 $("#dt-search-0")[0].value += " " + value;
                 $("#dt-search-0").trigger("keyup");
             }
@@ -186,7 +262,6 @@
                 <th width="8%">カテゴリ</th>
                 <th>必要素材</th>
                 <th width="30%">リアクション</th>
-                <th>リアクション</th>
                 <th width="25%">タグ</th>
             </thead>
             <tbody></tbody>
