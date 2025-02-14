@@ -3870,5 +3870,61 @@
         "Material":  "想いの木材/2,想いの石ころ/2,花びら/2",
         "Reaction":  "",
         "Tag":  "カラータイル"
+    },
+    {
+        "No":  "485",
+        "Name":  "苔むした岩",
+        "Category":  "？？？",
+        "Material":  "？？？",
+        "Reaction":  "？？？",
+        "Tag":  "？？？"
+    },
+    {
+        "No":  "486",
+        "Name":  "岩",
+        "Category":  "？？？",
+        "Material":  "？？？",
+        "Reaction":  "？？？",
+        "Tag":  "？？？"
+    },
+    {
+        "No":  "487",
+        "Name":  "石",
+        "Category":  "？？？",
+        "Material":  "？？？",
+        "Reaction":  "？？？",
+        "Tag":  "？？？"
+    },
+    {
+        "No":  "488",
+        "Name":  "草の生えた岩",
+        "Category":  "？？？",
+        "Material":  "？？？",
+        "Reaction":  "？？？",
+        "Tag":  "？？？"
+    },
+    {
+        "No":  "489",
+        "Name":  "草の生えた石",
+        "Category":  "？？？",
+        "Material":  "？？？",
+        "Reaction":  "？？？",
+        "Tag":  "？？？"
+    },
+    {
+        "No":  "490",
+        "Name":  "低木",
+        "Category":  "？？？",
+        "Material":  "？？？",
+        "Reaction":  "？？？",
+        "Tag":  "？？？"
+    },
+    {
+        "No":  "491",
+        "Name":  "花の咲いた低木",
+        "Category":  "？？？",
+        "Material":  "？？？",
+        "Reaction":  "？？？",
+        "Tag":  "？？？"
     }
 ]
