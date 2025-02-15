@@ -3874,57 +3874,57 @@
     {
         "No":  "485",
         "Name":  "苔むした岩",
-        "Category":  "？？？",
-        "Material":  "？？？",
-        "Reaction":  "？？？",
-        "Tag":  "？？？"
+        "Category":  "一般/その他",
+        "Material":  "想いの石ころ/21,花びら/21",
+        "Reaction":  "",
+        "Tag":  ""
     },
     {
         "No":  "486",
         "Name":  "岩",
-        "Category":  "？？？",
-        "Material":  "？？？",
-        "Reaction":  "？？？",
-        "Tag":  "？？？"
+        "Category":  "一般/その他",
+        "Material":  "想いの石ころ/21",
+        "Reaction":  "",
+        "Tag":  ""
     },
     {
         "No":  "487",
         "Name":  "石",
-        "Category":  "？？？",
-        "Material":  "？？？",
-        "Reaction":  "？？？",
-        "Tag":  "？？？"
+        "Category":  "一般/その他",
+        "Material":  "想いの石ころ/21",
+        "Reaction":  "",
+        "Tag":  ""
     },
     {
         "No":  "488",
         "Name":  "草の生えた岩",
-        "Category":  "？？？",
-        "Material":  "？？？",
-        "Reaction":  "？？？",
-        "Tag":  "？？？"
+        "Category":  "一般/その他",
+        "Material":  "想いの石ころ/21,花びら/21",
+        "Reaction":  "",
+        "Tag":  ""
     },
     {
         "No":  "489",
         "Name":  "草の生えた石",
-        "Category":  "？？？",
-        "Material":  "？？？",
-        "Reaction":  "？？？",
-        "Tag":  "？？？"
+        "Category":  "一般/その他",
+        "Material":  "想いの石ころ/21,花びら/21",
+        "Reaction":  "",
+        "Tag":  ""
     },
     {
         "No":  "490",
         "Name":  "低木",
-        "Category":  "？？？",
-        "Material":  "？？？",
-        "Reaction":  "？？？",
-        "Tag":  "？？？"
+        "Category":  "一般/その他",
+        "Material":  "想いの木材/30",
+        "Reaction":  "",
+        "Tag":  "グリーン"
     },
     {
         "No":  "491",
         "Name":  "花の咲いた低木",
-        "Category":  "？？？",
-        "Material":  "？？？",
-        "Reaction":  "？？？",
-        "Tag":  "？？？"
+        "Category":  "一般/その他",
+        "Material":  "想いの木材/30,花びら/21",
+        "Reaction":  "",
+        "Tag":  "グリーン"
     }
 ]
