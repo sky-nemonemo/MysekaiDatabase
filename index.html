@@ -43,12 +43,14 @@
                             element.Reaction = reactions.toString();
                         }
                         // アイコン画像変換処理
-                        if (element.Reaction != "") {
+                        if (element.Reaction != "" && element.Reaction != "？？？") {
                             element.ReactionData.image =  element.Reaction.split(",").map(reaction => {
                                 return `<span style="display:inline-block; margin:1px;">` + reaction.split("+").map(reaction2 => {
                                     return `<img width="26px" src="${baseUrl}${iconmap.get(reaction2)}.png">`;
                                 }).join("+") + `</span>`;
                             }).join("");
+                        } else {
+                            element.ReactionData.image = element.Reaction;
                         }
                         // 表記変換処理
                         element.ReactionData.text = convertUnit(element.Reaction);
