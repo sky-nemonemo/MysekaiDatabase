@@ -13,6 +13,96 @@
         <script>
             $(function() {
                 $.get("data.json?date=" + Date.now(), function(data) {
+                    // データ加工処理
+                    data.forEach(element => {
+                        // 素材データ変換
+                        element.MaterialText =  element.Material.split(",").map(material => {
+                            return `<span style="display:inline-block; margin-right:10px;">${material.replaceAll("/", "×")}</span>`;
+                        }).join("");
+
+                        // リアクションデータ変換
+                        element.ReactionData = {
+                            text: null,
+                            image: null,
+                        };
+                        if (element.Reaction == "") {
+                            element.ReactionData.text = "なし";
+                        } else if (element.Reaction == "？？？") {
+                            element.ReactionData.text = element.Reaction;
+                        } else if (element.Reaction.includes("\[")) {
+                            // 組み合わせ変換処理
+                            var reactions = [];
+                            if (!element.Reaction.startsWith("[")) {
+                                reactions.push(element.Reaction.split(",\[")[0]);
+                            }
+                            element.Reaction.match(/\[.*?\]/g).forEach(group => {
+                                group = group.replaceAll("\[", "").replaceAll("\]", "");
+                                combinations = combination(group.split(","));
+                                reactions.push(combinations);
+                            });
+                            element.Reaction = reactions.toString();
+                        }
+                        // アイコン画像変換処理
+                        if (element.Reaction != "") {
+                            element.ReactionData.image =  element.Reaction.split(",").map(reaction => {
+                                return `<span style="display:inline-block; margin:1px;">` + reaction.split("+").map(reaction2 => {
+                                    return `<img width="26px" src="${baseUrl}${iconmap.get(reaction2)}.png">`;
+                                }).join("+") + `</span>`;
+                            }).join("");
+                        }
+                        // 表記変換処理
+                        element.ReactionData.text = convertUnit(element.Reaction);
+
+                        // タグデータ変換
+                        if (element.Tag == "") {
+                            element.TagText = element.Tag;
+                        } else {
+                            element.TagText = element.Tag.split(",").map(tag => {
+                                return `<button type="button" class="btn btn-sm btn-light me-1" onclick="search(this.innerText)">${tag}</button>`;
+                            }).join("");
+                        }
+                    });
+                    // 詳細検索条件用データ生成
+                    const searchOptions = {
+                        // 検索条件：カテゴリ
+                        categories: Array.from(categories).map(key => {
+                            return {
+                                label: key,
+                                value: function(rowData, rowIdx) {
+                                    return rowData.Category.includes(key.replaceAll("/すべて", ""));
+                                }
+                            }
+                        }),
+                        // 検索条件：リアクション
+                        reactions: Array.from(iconmap.keys()).map(key => {
+                            return {
+                                label: `<img width="26px" src="${baseUrl}${iconmap.get(key)}.png"> ${convertUnit(key)}`,
+                                value: function(rowData, rowIdx) {
+                                    return rowData.Reaction.includes(key);
+                                }
+                            }
+                        }),
+                        // 検索条件：タグ
+                        tags: function() {
+                            const tags = new Set(series);
+                            data.forEach(element => {
+                                element.Tag.split(",").forEach(tag => {
+                                    if (tag !== "") {
+                                        tags.add(tag);
+                                    }
+                                });
+                            });
+                            return Array.from(tags.values()).map(tag => {
+                                return {
+                                    label: tag,
+                                    value: function(rowData, rowIdx) {
+                                        return rowData.Tag.includes(tag);
+                                    }
+                                }
+                            });
+                        }(),
+                    };
+                    // テーブル作成
                     var table = $("#contents").DataTable({
                         data: data,
                         columns: [
@@ -36,69 +126,26 @@
                                 },
                             },
                             {
-                                data: "Material",
+                                data: "MaterialText",
                                 searchPanes: {
                                     show: false
-                                },
-                                render: function(data, type) {
-                                    // 表記変換処理
-                                    return data.split(",").map(element => {
-                                        return `<span style="display:inline-block; margin-right:10px;">${element.replaceAll("/", "×")}</span>`;
-                                    }).join("");
                                 },
                             },
                             {
-                                data: "Reaction",
+                                data: "ReactionData",
                                 searchPanes: {
                                     show: false
                                 },
-                                render: function(data, type) {
-                                    if (data == "") {
-                                        return "なし"
-                                    } else if (data == "？？？") {
-                                        return data;
-                                    }
-                                    if (data.includes("\[")) {
-                                        // 組み合わせ変換処理
-                                        var reactions = [];
-                                        if (!data.startsWith("[")) {
-                                            reactions.push(data.split(",\[")[0]);
-                                        }
-                                        data.match(/\[.*?\]/g).forEach(group => {
-                                            group = group.replaceAll("\[", "").replaceAll("\]", "");
-                                            combinations = combination(group.split(","));
-                                            reactions.push(combinations);
-                                        });
-                                        data = reactions.toString();
-                                    }
-                                    if (type === "display" || type === "sort") {
-                                        // アイコン画像変換処理
-                                        return data.split(",").map(element => {
-                                            return `<span style="display:inline-block; margin:1px;">` + element.split("+").map(element2 => {
-                                                return `<img width="26px" src="${baseUrl}${iconmap.get(element2)}.png">`;
-                                            }).join("+") + `</span>`;
-                                        }).join("");
-                                    } else if (type === "filter") {
-                                        // 表記変換処理
-                                        return convertUnit(data);
-                                    } else {
-                                        return data;
-                                    }
+                                render: {
+                                    _: "text",
+                                    filter: "text",
+                                    display: "image",
                                 },
                             },
                             {
-                                data: "Tag",
+                                data: "TagText",
                                 searchPanes: {
                                     show: false
-                                },
-                                render: function(data, type) {
-                                    // ボタン変換処理
-                                    if (data == "") {
-                                        return data;
-                                    }
-                                    return data.split(",").map(element => {
-                                        return `<button type="button" class="btn btn-sm btn-light me-1" onclick="search(this.innerText)">${element}</button>`;
-                                    }).join("");
                                 },
                             },
                         ],
@@ -106,6 +153,7 @@
                         pageLength: 100,
                         fixedHeader: true,
                         scrollY: '80vh',
+                        searchDelay: 250,
                         responsive: true,
                         language: {
                             url: "https://cdn.datatables.net/plug-ins/2.2.2/i18n/ja.json",
@@ -142,14 +190,7 @@
                                                 {
                                                     name: "カテゴリ",
                                                     header: "カテゴリ",
-                                                    options: Array.from(categories).map(key => {
-                                                        return {
-                                                            label: key,
-                                                            value: function(rowData, rowIdx) {
-                                                                return rowData.Category.includes(key.replaceAll("/すべて", ""));
-                                                            }
-                                                        }
-                                                    }),
+                                                    options: searchOptions.categories,
                                                     dtOpts: {
                                                         ordering: false,
                                                     },
@@ -158,14 +199,7 @@
                                                 {
                                                     name: "リアクション",
                                                     header: "リアクション",
-                                                    options: Array.from(iconmap.keys()).map(key => {
-                                                        return {
-                                                            label: `<img width="26px" src="${baseUrl}${iconmap.get(key)}.png"> ${convertUnit(key)}`,
-                                                            value: function(rowData, rowIdx) {
-                                                                return rowData.Reaction.includes(key);
-                                                            }
-                                                        }
-                                                    }),
+                                                    options: searchOptions.reactions,
                                                     dtOpts: {
                                                         ordering: false,
                                                     },
@@ -173,24 +207,7 @@
                                                 {
                                                     name: "タグ",
                                                     header: "タグ",
-                                                    options: function() {
-                                                        const tags = new Set(series);
-                                                        data.forEach(element => {
-                                                            element.Tag.split(",").forEach(tag => {
-                                                                if (tag !== "") {
-                                                                    tags.add(tag);
-                                                                }
-                                                            });
-                                                        });
-                                                        return Array.from(tags.values()).map(tag => {
-                                                            return {
-                                                                label: tag,
-                                                                value: function(rowData, rowIdx) {
-                                                                    return rowData.Tag.includes(tag);
-                                                                }
-                                                            }
-                                                        });
-                                                    }(),
+                                                    options: searchOptions.tags,
                                                     dtOpts: {
                                                         ordering: false,
                                                         paging: true,
