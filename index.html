@@ -46,7 +46,7 @@
                         if (element.Reaction != "" && element.Reaction != "？？？") {
                             element.ReactionData.image =  element.Reaction.split(",").map(reaction => {
                                 return `<span style="display:inline-block; margin:1px;">` + reaction.split("+").map(reaction2 => {
-                                    return `<img width="26px" src="${baseUrl}${iconmap.get(reaction2)}.png">`;
+                                    return `<img width="26px" draggable="false" src="${baseUrl}${iconmap.get(reaction2)}.png">`;
                                 }).join("+") + `</span>`;
                             }).join("");
                         } else {
@@ -78,7 +78,7 @@
                         // 検索条件：リアクション
                         reactions: Array.from(iconmap.keys()).map(key => {
                             return {
-                                label: `<img width="26px" src="${baseUrl}${iconmap.get(key)}.png"> ${convertUnit(key)}`,
+                                label: `<img width="26px" draggable="false" src="${baseUrl}${iconmap.get(key)}.png"> ${convertUnit(key)}`,
                                 value: function(rowData, rowIdx) {
                                     return rowData.Reaction.includes(key);
                                 }
@@ -196,7 +196,6 @@
                                                     dtOpts: {
                                                         ordering: false,
                                                     },
-                                                    ordering: false,
                                                 },
                                                 {
                                                     name: "リアクション",
