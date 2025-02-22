@@ -70,18 +70,14 @@
                         categories: Array.from(categories).map(key => {
                             return {
                                 label: key,
-                                value: function(rowData, rowIdx) {
-                                    return rowData.Category.includes(key.replaceAll("/すべて", ""));
-                                }
+                                data: `${key.replaceAll("/すべて", "")}`,
                             }
                         }),
                         // 検索条件：リアクション
                         reactions: Array.from(iconmap.keys()).map(key => {
                             return {
-                                label: `<img width="26px" draggable="false" src="${baseUrl}${iconmap.get(key)}.png"> ${convertUnit(key)}`,
-                                value: function(rowData, rowIdx) {
-                                    return rowData.Reaction.includes(key);
-                                }
+                                label: `<img width="26px" draggable="false" src="${baseUrl}${iconmap.get(key)}.png">`,
+                                data: `${convertUnit(key)}`,
                             }
                         }),
                         // 検索条件：タグ
@@ -97,9 +93,7 @@
                             return Array.from(tags.values()).map(tag => {
                                 return {
                                     label: tag,
-                                    value: function(rowData, rowIdx) {
-                                        return rowData.Tag.includes(tag);
-                                    }
+                                    data: tag,
                                 }
                             });
                         }(),
@@ -177,55 +171,50 @@
                             }
                         },
                         layout: {
-                            topEnd: {
-                                search: {},
-                                buttons: [
-                                    {
-                                        extend: "searchPanes",
-                                        config: {
-                                            cascadePanes: true,
-                                            collapse: false,
-                                            orderable: false,
-                                            viewTotal: true,
-                                            threshold: 1,
-                                            panes: [
-                                                {
-                                                    name: "カテゴリ",
-                                                    header: "カテゴリ",
-                                                    options: searchOptions.categories,
-                                                    dtOpts: {
-                                                        ordering: false,
-                                                    },
-                                                },
-                                                {
-                                                    name: "リアクション",
-                                                    header: "リアクション",
-                                                    options: searchOptions.reactions,
-                                                    dtOpts: {
-                                                        ordering: false,
-                                                    },
-                                                },
-                                                {
-                                                    name: "タグ",
-                                                    header: "タグ",
-                                                    options: searchOptions.tags,
-                                                    dtOpts: {
-                                                        ordering: false,
-                                                        paging: true,
-                                                        layout: {
-                                                            bottom: {
-                                                                paging: {
-                                                                    type: 'numbers'
-                                                                }
-                                                            }
-                                                        },
-                                                    },
-                                                }
-                                            ]
-                                        },
-                                    }
-                                ]
-                            }
+                            topEnd: [
+                                function() {
+                                    return `
+                                        <div>絞り込み:
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">カテゴリ</button>
+                                                <div class="dropdown-menu dropdown-menu-end p-2" style="width:600px">
+                                                    ${searchOptions.categories.map(category => {
+                                                        return `<button class="btn btn-sm btn-light m-1" data-bs-toggle="button" search-target-column="2" search-data="${category.data}" onclick="detailSearch(this)">${category.label}</button>`;
+                                                    }).join("")}
+                                                    <hr class="dropdown-divider">
+                                                    <button class="btn btn-sm btn-light m-1" search-target-column="2" onclick="detailSearchClear(this)">すべて選択解除</button>
+                                                </div>
+                                            </div>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">リアクション</button>
+                                                <div class="dropdown-menu dropdown-menu-end p-2" style="width:420px">
+                                                    ${searchOptions.reactions.map(reaction => {
+                                                        return `
+                                                            ${reaction.label.match("(minori|kohane|tsukasa|kanade)") ? "<br>" : ""}
+                                                            <button class="btn btn-sm btn-light m-1" data-bs-toggle="button" search-target-column="4" search-data="${reaction.data}" onclick="detailSearch(this)">${reaction.label}</button>
+                                                        `;
+                                                    }).join("")}
+                                                    <hr class="dropdown-divider">
+                                                    <button class="btn btn-sm btn-light m-1" search-target-column="4" onclick="detailSearchClear(this)">すべて選択解除</button>
+                                                </div>
+                                            </div>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">タグ</button>
+                                                <div class="dropdown-menu dropdown-menu-end p-2" style="width:800px">
+                                                    ${searchOptions.tags.map(tag => {
+                                                        return `<button class="btn btn-sm btn-light m-1" data-bs-toggle="button" search-target-column="5" search-data="${tag.data}" onclick="detailSearch(this)">${tag.label}</button>`;
+                                                    }).join("")}
+                                                    <hr class="dropdown-divider">
+                                                    <button class="btn btn-sm btn-light m-1" search-target-column="5" onclick="detailSearchClear(this)">すべて選択解除</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `;
+                                },
+                                {
+                                    search: {},
+                                }
+                            ]
                         },
                     });
                     table.on("page", function() {
@@ -264,12 +253,31 @@
 
             // ユニット識別子変換関数
             function convertUnit(value) {
-                var initial = value.split("")[0];
+                // var initial = value.split("")[0];
                 value = value.replaceAll("メイコ", "MEIKO").replaceAll("カイト", "KAITO");
-                if (units.has(initial)) {
-                    return value.split("").slice(1).join("") + ` (${units.get(initial)})`;
-                }
+                // if (units.has(initial)) {
+                //     return value.split("").slice(1).join("") + ` (${units.get(initial)})`;
+                // }
                 return value;
+            }
+
+            // 絞り込み検索処理
+            function detailSearch(data) {
+                const searchTargetColumn = $(data).attr("search-target-column");
+                const condition = $.map($(`button.active[search-target-column="${searchTargetColumn}"]`),
+                    function(value) {
+                        return $(value).attr("search-data");
+                    }
+                ).join(" ");
+                console.log(condition);
+                $("#contents").DataTable().column(searchTargetColumn).search(condition).draw();
+            }
+
+            // 絞り込み検索解除処理
+            function detailSearchClear(data) {
+                const searchTargetColumn = $(data).attr("search-target-column");
+                $(`button.active[search-target-column="${searchTargetColumn}"]`).removeClass("active");
+                $("#contents").DataTable().column(searchTargetColumn).search("").draw();
             }
         </script>
         <style>
