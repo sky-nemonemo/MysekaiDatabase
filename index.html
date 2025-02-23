@@ -187,7 +187,7 @@
                                                 label: "リアクション",
                                                 options: searchOptions.reactions,
                                                 searchTargetColumn: 4,
-                                                width: "420px",
+                                                width: "600px",
                                             })}
                                             ${createDetailSearchForm({
                                                 name: "tag",
@@ -241,23 +241,19 @@
 
             // ユニット識別子変換関数
             function convertUnit(value) {
-                // var initial = value.split("")[0];
                 value = value.replaceAll("メイコ", "MEIKO").replaceAll("カイト", "KAITO");
-                // if (units.has(initial)) {
-                //     return value.split("").slice(1).join("") + ` (${units.get(initial)})`;
-                // }
                 return value;
             }
 
             // 絞り込み検索処理
             function detailSearch(data) {
                 const searchTargetColumn = $(data).attr("search-target-column");
-                const useRegex = $(`input[type="radio"][search-target-column="${searchTargetColumn}"]:checked`).val() === "or";
+                const searchType = $(`input[type="radio"][search-target-column="${searchTargetColumn}"]:checked`).val();
                 const condition = $.map($(`button.active[search-target-column="${searchTargetColumn}"]`),
                     function(value) {
                         return $(value).attr("search-data");
                     }
-                ).join(useRegex ? "|" : " ");
+                ).join(searchType === "and" ? " " : searchType === "or" ? "|" : "\\+");
                 $("#contents").DataTable().column(searchTargetColumn).search(condition, true, true).draw();
             }
 
@@ -271,7 +267,7 @@
             // 絞り込み検索フォーム構築処理
             function createDetailSearchForm(formData) {
                 const dropdownOpts = `class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"`;
-                const dropdownMenuOpts = `class="dropdown-menu dropdown-menu-end p-2" style="width:${formData.width}"`;
+                const dropdownMenuOpts = `name="dropdown-${formData.name}" class="dropdown-menu dropdown-menu-end p-2" style="width:${formData.width}"`;
                 const buttonsOpts = `class="btn btn-sm btn-light m-1" data-bs-toggle="button" search-target-column="${formData.searchTargetColumn}" onclick="detailSearch(this)"`;
                 const clearButtonOpts = `class="btn btn-sm btn-light m-1" search-target-column="${formData.searchTargetColumn}" onclick="detailSearchClear(this)"`;
                 const switchFormOpts = `class="form-check form-check-inline"`;
@@ -298,6 +294,10 @@
                             <div ${switchFormOpts}>
                                 <input ${switchButtonsOpts} id="${formData.name}SearchSwitchOr" value="or">
                                 <label ${switchLabelsOpts} for="${formData.name}SearchSwitchOr">OR検索</label>
+                            </div>
+                            <div ${switchFormOpts} ${formData.name === "reaction" ? "" : "hidden"}>
+                                <input ${switchButtonsOpts} id="${formData.name}SearchSwitchMulti" value="multi">
+                                <label ${switchLabelsOpts} for="${formData.name}SearchSwitchMulti">複数人リアクション検索</label>
                             </div>
                         </div>
                     </div>
