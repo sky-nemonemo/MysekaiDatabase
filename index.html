@@ -70,14 +70,14 @@
                         categories: Array.from(categories).map(key => {
                             return {
                                 label: key,
-                                data: `${key.replaceAll("/すべて", "")}`,
+                                data: `^${DataTable.util.escapeRegex(key).replaceAll("/すべて", "/.+")}$`,
                             }
                         }),
                         // 検索条件：リアクション
                         reactions: Array.from(iconmap.keys()).map(key => {
                             return {
                                 label: `<img width="26px" draggable="false" src="${baseUrl}${iconmap.get(key)}.png">`,
-                                data: `${convertUnit(key)}`,
+                                data: `${DataTable.util.escapeRegex(convertUnit(key))}`,
                             }
                         }),
                         // 検索条件：タグ
@@ -93,7 +93,7 @@
                             return Array.from(tags.values()).map(tag => {
                                 return {
                                     label: tag,
-                                    data: tag,
+                                    data: DataTable.util.escapeRegex(tag),
                                 }
                             });
                         }(),
@@ -175,39 +175,27 @@
                                 function() {
                                     return `
                                         <div>絞り込み:
-                                            <div class="btn-group">
-                                                <button class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">カテゴリ</button>
-                                                <div class="dropdown-menu dropdown-menu-end p-2" style="width:600px">
-                                                    ${searchOptions.categories.map(category => {
-                                                        return `<button class="btn btn-sm btn-light m-1" data-bs-toggle="button" search-target-column="2" search-data="${category.data}" onclick="detailSearch(this)">${category.label}</button>`;
-                                                    }).join("")}
-                                                    <hr class="dropdown-divider">
-                                                    <button class="btn btn-sm btn-light m-1" search-target-column="2" onclick="detailSearchClear(this)">すべて選択解除</button>
-                                                </div>
-                                            </div>
-                                            <div class="btn-group">
-                                                <button class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">リアクション</button>
-                                                <div class="dropdown-menu dropdown-menu-end p-2" style="width:420px">
-                                                    ${searchOptions.reactions.map(reaction => {
-                                                        return `
-                                                            ${reaction.label.match("(minori|kohane|tsukasa|kanade)") ? "<br>" : ""}
-                                                            <button class="btn btn-sm btn-light m-1" data-bs-toggle="button" search-target-column="4" search-data="${reaction.data}" onclick="detailSearch(this)">${reaction.label}</button>
-                                                        `;
-                                                    }).join("")}
-                                                    <hr class="dropdown-divider">
-                                                    <button class="btn btn-sm btn-light m-1" search-target-column="4" onclick="detailSearchClear(this)">すべて選択解除</button>
-                                                </div>
-                                            </div>
-                                            <div class="btn-group">
-                                                <button class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">タグ</button>
-                                                <div class="dropdown-menu dropdown-menu-end p-2" style="width:800px">
-                                                    ${searchOptions.tags.map(tag => {
-                                                        return `<button class="btn btn-sm btn-light m-1" data-bs-toggle="button" search-target-column="5" search-data="${tag.data}" onclick="detailSearch(this)">${tag.label}</button>`;
-                                                    }).join("")}
-                                                    <hr class="dropdown-divider">
-                                                    <button class="btn btn-sm btn-light m-1" search-target-column="5" onclick="detailSearchClear(this)">すべて選択解除</button>
-                                                </div>
-                                            </div>
+                                            ${createDetailSearchForm({
+                                                name: "category",
+                                                label: "カテゴリ",
+                                                options: searchOptions.categories,
+                                                searchTargetColumn: 2,
+                                                width: "600px",
+                                            })}
+                                            ${createDetailSearchForm({
+                                                name: "reaction",
+                                                label: "リアクション",
+                                                options: searchOptions.reactions,
+                                                searchTargetColumn: 4,
+                                                width: "420px",
+                                            })}
+                                            ${createDetailSearchForm({
+                                                name: "tag",
+                                                label: "タグ",
+                                                options: searchOptions.tags,
+                                                searchTargetColumn: 5,
+                                                width: "800px",
+                                            })}
                                         </div>
                                     `;
                                 },
@@ -264,13 +252,13 @@
             // 絞り込み検索処理
             function detailSearch(data) {
                 const searchTargetColumn = $(data).attr("search-target-column");
+                const useRegex = $(`input[type="radio"][search-target-column="${searchTargetColumn}"]:checked`).val() === "or";
                 const condition = $.map($(`button.active[search-target-column="${searchTargetColumn}"]`),
                     function(value) {
                         return $(value).attr("search-data");
                     }
-                ).join(" ");
-                console.log(condition);
-                $("#contents").DataTable().column(searchTargetColumn).search(condition).draw();
+                ).join(useRegex ? "|" : " ");
+                $("#contents").DataTable().column(searchTargetColumn).search(condition, true, true).draw();
             }
 
             // 絞り込み検索解除処理
@@ -278,6 +266,42 @@
                 const searchTargetColumn = $(data).attr("search-target-column");
                 $(`button.active[search-target-column="${searchTargetColumn}"]`).removeClass("active");
                 $("#contents").DataTable().column(searchTargetColumn).search("").draw();
+            }
+
+            // 絞り込み検索フォーム構築処理
+            function createDetailSearchForm(formData) {
+                const dropdownOpts = `class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"`;
+                const dropdownMenuOpts = `class="dropdown-menu dropdown-menu-end p-2" style="width:${formData.width}"`;
+                const buttonsOpts = `class="btn btn-sm btn-light m-1" data-bs-toggle="button" search-target-column="${formData.searchTargetColumn}" onclick="detailSearch(this)"`;
+                const clearButtonOpts = `class="btn btn-sm btn-light m-1" search-target-column="${formData.searchTargetColumn}" onclick="detailSearchClear(this)"`;
+                const switchFormOpts = `class="form-check form-check-inline"`;
+                const switchButtonsOpts = `class="form-check-input" type="radio" name="${formData.name}SearchSwitch" search-target-column="${formData.searchTargetColumn}" onclick="detailSearch(this)"`;
+                const switchLabelsOpts = `class="form-check-label"`;
+                return `
+                    <div class="btn-group">
+                        <button ${dropdownOpts}>${formData.label}</button>
+                        <div ${dropdownMenuOpts}>
+                            ${formData.options.map(option => {
+                                var result = ``;
+                                if (option.label.startsWith("<img") && option.label.match("minori|kohane|tsukasa|kanade")) {
+                                    result += "<br>";
+                                }
+                                result += `<button ${buttonsOpts} search-data="${option.data}">${option.label}</button>`
+                                return result;
+                            }).join("")}
+                            <hr class="dropdown-divider">
+                            <button ${clearButtonOpts}>すべて選択解除</button>
+                            <div ${switchFormOpts}>
+                                <input ${switchButtonsOpts} id="${formData.name}SearchSwitchAnd" value="and" checked>
+                                <label ${switchLabelsOpts} for="${formData.name}SearchSwitchAnd">AND検索</label>
+                            </div>
+                            <div ${switchFormOpts}>
+                                <input ${switchButtonsOpts} id="${formData.name}SearchSwitchOr" value="or">
+                                <label ${switchLabelsOpts} for="${formData.name}SearchSwitchOr">OR検索</label>
+                            </div>
+                        </div>
+                    </div>
+                `;
             }
         </script>
         <style>
