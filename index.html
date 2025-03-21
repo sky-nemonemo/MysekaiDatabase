@@ -288,8 +288,11 @@
                         <div ${dropdownMenuOpts}>
                             ${formData.options.map(option => {
                                 var result = ``;
-                                if (option.label.startsWith("<img") && option.label.match("minori|kohane|tsukasa|kanade")) {
+                                if (option.label.startsWith("<img") && option.label.match("0[2-5]_1_")) {
                                     result += "<br>";
+                                }
+                                if (option.label.startsWith("<img") && option.label.match("0[1-5]_1_")) {
+                                    result += `<img src="https://pjsekai.sega.jp/assets/data/webp/character/unite${option.label.match("(0[1-5])")[0]}/logo.png.webp" width="80px">`;
                                 }
                                 result += `<button ${buttonsOpts} search-data="${option.data}">${option.label}</button>`
                                 return result;
