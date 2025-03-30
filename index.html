@@ -210,8 +210,16 @@
                                 },
                                 {
                                     search: {},
+                                },
+                                function() {
+                                    return `<button class="btn btn-outline-secondary rounded-circle fs-6 p-0" style="width:25px; height:25px;" data-bs-toggle="modal" data-bs-target="#helpModal">？</button>`;
                                 }
-                            ]
+                            ],
+                            bottomStart: [
+                                function() {
+                                    return `© SEGA / © Colorful Palette Inc. / © Crypton Future Media, INC. www.piapro.net All rights reserved.</p>`;
+                                },
+                            ],
                         },
                     });
                     table.on("page", function() {
@@ -286,6 +294,7 @@
                     <div class="btn-group">
                         <button ${dropdownOpts}>${formData.label}</button>
                         <div ${dropdownMenuOpts}>
+                            <div>${formData.label}検索</div>
                             ${formData.options.map(option => {
                                 var result = ``;
                                 if (option.label.startsWith("<img") && option.label.match("0[2-5]_1_")) {
@@ -338,5 +347,88 @@
             </thead>
             <tbody></tbody>
         </table>
+        <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="helpModalLabel">ヘルプ</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <p class="fs-5">本サイトについて</p>
+                  <p>
+                    アプリゲーム「プロジェクトセカイ カラフルステージ feat.初音ミク」内のコンテンツ、<br>
+                    「マイセカイ」における各種家具の設計図情報をまとめたファンメイドのデータベースサイトです。
+                  </p>
+                  <hr>
+                  <p class="fs-5">利用方法</p>
+                  <p>
+                    メインのテーブル内には各種家具のデータが表示されており、それぞれの家具について下記の情報を確認できます。
+                    <li>名称</li>
+                    <li>カテゴリ</li>
+                    <li>必要素材</li>
+                    <li>リアクションするキャラクター</li>
+                    <li>タグ</li>
+                    右上にある検索フォームからは、テーブル内に表示するデータの絞り込みが可能です。<br>
+                    テキストボックスに文字を入力すると、特定の文字を含むデータをシンプルに検索できます。<br>
+                    「カテゴリ」「リアクション」「タグ」のボタンを押すと各データごとの専用フォームが表示され、<br>
+                    フォーム内からデータを選択することで視覚的な検索が可能です。<br>
+                    また、専用フォーム下部のラジオボタンではAND検索やOR検索を切り替えることも可能です。
+                  </p>
+                  <hr>
+                  <p class="fs-5">変更履歴</p>
+                  <table id="history" class="table table-striped" style="width:100%">
+                      <thead>
+                          <th>日付</th>
+                          <th>変更内容
+                      </thead>
+                      <tbody>
+                        <tr>
+                            <td>2025/03/30</td>
+                            <td>
+                                フレンチスタイルのくまのぬいぐるみのリアクションに奏+絵名を追加<br>
+                                各種カラーブロックを追加<br>
+                                各種改善（ヘルプダイアログの追加など）
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2025/03/22</td>
+                            <td>
+                                2025/03/19に新規追加された家具データの追加完了
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2025/03/09</td>
+                            <td>
+                                2025/02/19に新規追加された家具データの追加完了
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2025/02/15</td>
+                            <td>
+                                2025/02/14に新規追加された家具データの追加完了
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2025/02/11</td>
+                            <td>
+                                初期から実装されている家具データの追加完了
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2025/02/09</td>
+                            <td>
+                                本サイトを公開
+                            </td>
+                        </tr>
+                      </tbody>
+                  </table>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                </div>
+              </div>
+            </div>
+          </div>
     </body>
 </html>
